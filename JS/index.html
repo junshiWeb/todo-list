@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js实现todolist</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="todolist">
+    <div>
+      <input class="search" type="text" placeholder="请输入要添加的任务，输入确认件提交任务">
+    </div>
+    <div class="section">
+      <h2>正在进行 <span id="todocount"></span></h2>
+      <ol id="todolist" class="demo-box">
+      </ol>
+      <h2>已经完成 <span id="donecount"></span></h2>
+      <ul id="donelist">
+      </ul>
+    </div>
+    <div class="footer">
+      <input type="checkbox" class="all-change">选中<span class="change">0</span>/合计<span class="count">3</span>
+      <button>清楚所选任务</button>
+    </div>
+  </div>
+  <script>
+    // 获取元素
+    let title_ele = document.querySelector('.search')
+    let section_ele = document.querySelector('.section')
+    let todolist_ele = document.querySelector('#todolist')
+    let donelist_ele = document.querySelector('#donelist')
+
+    // 1.添加待办事项
+    addEvent(title_ele, 'keydown', function (e) {
+      var keyCode = e.which || e.keyCode
+      var obj = {
+        tag_name: 'li',
+        children: [
+          {
+            tag_name: 'input',
+            attributes: {
+              type: "checkbox",
+              class: 'checkbox'
+            }
+          },
+          {
+            tag_name: 'p',
+            content: title_ele.value
+          },
+          {
+            tag_name: 'a',
+            attributes: {
+              href: 'javascript:;'
+            }
+          }
+        ]
+      }
+      if (keyCode === 13) {
+        if (title_ele.value === "") {
+          alert("请输入待办内容")
+        } else {
+          todolist_ele.insertBefore(createEle(obj), todolist_ele.childNodes[0])
+          title_ele.value = ''
+        }
+      }
+    })
+    // 2.完成待办事项
+    addEvent(todolist_ele, "change", ".checkbox", function () {
+      donelist_ele.insertBefore(this.parentNode, donelist_ele.childNodes[0]);
+    })
+
+    // 3.重置已完成
+
+
+    // 4.删除事项
+
+
+    // 5.修改事项内容
+
+
+    // 创建元素对象
+    function createEle(obj) {
+      var node = document.createElement(obj.tag_name)
+      if (obj.attributes) {
+        for (var attr in obj.attributes) {
+          console.log(attr);
+          console.log(obj.attributes[attr]);
+          node.setAttribute(attr, obj.attributes[attr])
+        }
+      }
+      if (obj.content) {
+        node.innerText = obj.content
+      }
+      if (obj.children && obj.children.length > 0) {
+        for (var i = 0; i < obj.children.length; i++) {
+          node.appendChild(createEle(obj.children[i]))
+        }
+      }
+      console.log(node);
+      return node
+    }
+
+
+    // 封装事件委托和事件监听
+
+    function addEvent(ele, event, fn_or_selector, fn) {
+      if (arguments.length === 4 && typeof fn_or_selector == "string") {
+        ele.addEventListener(event, function (evt) {
+          var e = evt || event
+          var target = e.target || e.srcElement
+          console.log('---');
+          switch (fn_or_selector.substr(0, 1)) {
+            case ".":
+              var selector_type = "className";
+              var selector_name = fn_or_selector.slice(1);
+              break;
+            case "#":
+              var selector_type = "id";
+              var selector_name = fn_or_selector.slice(1);
+              break;
+            default:
+              var selector_type = "nodeName";
+              var selector_name = fn_or_selector.toUpperCase();
+          }
+          while (target !== ele) {
+            // 验证事件目标
+            if (target[selector_type] === selector_name) {
+              // 使用call改变this指向
+              fn.call(target, e);
+              break;
+            }
+            target = target.parentNode;
+          }
+        })
+        return false
+      }
+      ele.addEventListener(event, fn_or_selector)
+    }
+
+  </script>
+</body>
+
+</html>

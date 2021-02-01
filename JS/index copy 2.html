@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js实现todolist</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="todolist">
+    <div class="header">
+      <input class="search" type="text" placeholder="请输入要添加的任务，输入确认件提交任务">
+    </div>
+    <div class="container">
+      <!-- <label class="item active">
+        <input type="checkbox" class="item-text" value="明细1">
+        <span>明细1</span>
+        <button>删除</button>
+      </label> -->
+
+    </div>
+    <div class="footer">
+      <input type="checkbox" class="all-change">选中<span class="change">0</span>/合计<span class="count">3</span>
+      <button>清楚所选任务</button>
+    </div>
+  </div>
+  <script>
+    let taskList = [{
+      id: 1,
+      title: '小明',
+      isChecked: true
+    },
+    {
+      id: 2,
+      title: '小花被',
+      isChecked: false
+    },
+    {
+      id: 3,
+      title: '1小花被',
+      isChecked: false
+    }]
+    let search = document.querySelector('.search')
+    let content = document.querySelector('.container')
+
+    let count = document.querySelector('.count')
+    let change = document.querySelector('.change')
+    let delChange = document.querySelector('.footer button')
+
+    renderList(taskList)
+    // 添加任务
+    search.addEventListener("keydown", function () {
+      if (event.keyCode === 13) {
+        console.log('输入确定');
+        if (!this.value.trim()) {
+          console.log("内容为空");
+          return
+        }
+        taskVal = this.value.trim()
+        // taskList.unshift({
+        //   id: new Date(),
+        //   title: taskVal,
+        //   isChecked: false
+        // })
+        // 1.创建元素
+        let item = document.createElement('div')
+        item.setAttribute('class', 'item')
+        item.innerHTML = `
+        <input type="checkbox" class="item-text">
+        <span>${taskVal}</span>
+        <button>删除</button>`
+        // 2.添加元素
+        content.insertBefore(item, content.children[0])
+        // 3.删除元素
+        let btns = document.querySelectorAll('.item button')
+        for (let i = 0; i < btns.length; i++) {
+          console.log(btns[i]);
+          btns[i].addEventListener('click', function () {
+            content.removeChild(this.parentNode)
+          })
+        }
+        this.value = ''
+      }
+    })
+
+    // 删除选中任务
+    delChange.addEventListener('click', function () {
+      // content.removeChild('div')
+      console.log(content);
+      content.removeChild()
+      taskList.forEach((item, index) => {
+
+      })
+    })
+
+    function renderList(list) {
+
+      for (let i = 0; i < taskList.length; i++) {
+        // 添加元素
+        let label = document.createElement('div')
+        label.setAttribute('class', 'item')
+        if (taskList[i].isChecked) {
+          label.innerHTML = `
+        <input type="checkbox" class="item-text" checked>
+        <span>${taskList[i].title}</span>
+        <button>删除</button>`
+        } else {
+          label.innerHTML = `
+        <input type="checkbox" class="item-text" >
+        <span>${taskList[i].title}</span>
+        <button>删除</button>`
+        }
+        content.appendChild(label)
+        // 删除元素
+        let btns = document.querySelectorAll('.item button')
+        for (let i = 0; i < btns.length; i++) {
+          console.log(btns[i]);
+          btns[i].addEventListener('click', function () {
+            content.removeChild(this.parentNode)
+          })
+        }
+        // 动态添加样式
+        label.addEventListener("mouseenter", function () {
+          label.setAttribute('class', 'item active')
+        })
+        label.addEventListener("mouseleave", function () {
+          label.setAttribute('class', 'item')
+        })
+        // 页脚数据显示
+        // 合计数据
+        count.innerHTML = taskList.length
+        // 选中数据
+        let changeList = taskList.filter(item => {
+          return item.isChecked === true
+        })
+        change.innerHTML = changeList.length
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>

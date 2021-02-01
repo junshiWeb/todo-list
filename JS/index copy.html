@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>js实现todolist</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="todolist">
+    <div class="header">
+      <input class="search" type="text" placeholder="请输入要添加的任务，输入确认件提交任务">
+    </div>
+    <div class="container">
+      <!-- <label class="item active">
+        <input type="checkbox" class="item-text" value="明细1">
+        <span>明细1</span>
+        <button>删除</button>
+      </label>
+      <label class="item">
+        <input type="checkbox" class="item-text">
+        <span>明细2</span>
+        <button>删除</button>
+      </label>
+      <label class="item">
+        <input type="checkbox" class="item-text">
+        <span>明细3</span>
+        <button>删除</button>
+      </label> -->
+
+    </div>
+    <div class="footer">
+      <input type="checkbox" class="all-change">选中<span class="change">0</span>/合计<span class="count">3</span>
+      <button>清楚所选任务</button>
+    </div>
+  </div>
+  <script>
+    // 渲染数据
+    function renderList(list) {
+      for (let i = 0; i < taskList.length; i++) {
+        let label = document.createElement('div')
+        label.setAttribute('class', 'item')
+        if (taskList[i].isChecked) {
+          label.innerHTML = `
+        <input type="checkbox" class="item-text" checked>
+        <span>${taskList[i].title}</span>
+        <button>删除</button>`
+        } else {
+          label.innerHTML = `
+        <input type="checkbox" class="item-text" >
+        <span>${taskList[i].title}</span>
+        <button>删除</button>`
+        }
+        container.appendChild(label)
+        label.addEventListener("mouseenter", function () {
+          label.setAttribute('class', 'item active')
+        })
+        label.addEventListener("mouseleave", function () {
+          label.setAttribute('class', 'item')
+        })
+        // let del = document.querySelectorAll('.item button')
+        // // console.log(del);
+        // for (let i = 0; i < del.length; i++) {
+        //   del[i].addEventListener('click', () => {
+        //     label.parentNode.removeChild(label)
+        //   })
+        // }
+      }
+    }
+    // 添加数据
+    function addList(data) {
+
+    }
+    // 删除当前数据
+    function delTarget(ele) {
+      ele.addEventListener('click', () => {
+        ele.parentNode.removeChild(ele)
+      })
+    }
+    // 删除选中数据
+
+    // 选中数据
+
+    // 全选，反选
+    let search = document.querySelector('.search')
+    let container = document.querySelector('.container')
+    let item = document.querySelectorAll('.item')
+    let itemText = document.querySelectorAll('.item span')
+    let allChange = document.querySelectorAll('all-change')
+    let delChange = document.querySelector('.footer button')
+    let taskVal = ''
+    let valText = ""
+    let taskList = [{
+      id: 1,
+      title: '小明',
+      isChecked: true
+    },
+    {
+      id: 2,
+      title: '小花被',
+      isChecked: false
+    }]
+    // 初始化数据
+    renderList(taskList)
+    // 添加数据
+    search.addEventListener("keydown", function () {
+      if (event.keyCode === 13) {
+        console.log('输入确定');
+        if (!this.value.trim()) {
+          console.log("内容为空");
+          return
+        }
+        taskVal = this.value.trim()
+        taskList.unshift({
+          id: new Date(),
+          title: taskVal,
+          isChecked: false
+        })
+        this.value = ''
+      }
+    })
+
+    for (let i = 0; i < itemText.length; i++) {
+      console.log(item[i]);
+      item[i].addEventListener("click", function () {
+        console.log(itemText[i].innerText);
+        valText = itemText[i].innerText
+      })
+    }
+    // itemText.forEach(function (item, index) {
+    //   console.log(this);
+    // })
+  </script>
+</body>
+
+</html>
